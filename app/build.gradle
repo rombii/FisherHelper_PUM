@@ -37,6 +37,13 @@ android {
 }
 
 dependencies {
+    implementation("aws.sdk.kotlin:s3:0.18.0-beta")
+    implementation("aws.sdk.kotlin:dynamodb:0.18.0-beta")
+    implementation("aws.sdk.kotlin:iam:0.18.0-beta")
+    implementation("aws.sdk.kotlin:cloudwatch:0.18.0-beta")
+    implementation("aws.sdk.kotlin:cognitoidentityprovider:0.18.0-beta")
+    implementation("aws.sdk.kotlin:sns:0.18.0-beta")
+    implementation("aws.sdk.kotlin:pinpoint:0.18.0-beta")
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.3.0'
