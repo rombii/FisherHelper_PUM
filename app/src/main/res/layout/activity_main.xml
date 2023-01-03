@@ -16,13 +16,17 @@
             android:id="@+id/textView2"
             android:layout_marginTop="356dp" />
 
-    <Button
-            android:text="@string/map_button_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/map_button"
-            android:layout_weight="1"
-            tools:layout_editor_absoluteY="394dp"
-            tools:layout_editor_absoluteX="168dp" />
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <Button
+                android:text="@string/map_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/map_button"
+                android:layout_weight="1" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
