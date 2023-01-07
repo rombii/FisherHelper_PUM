@@ -22,9 +22,7 @@ class NearestFishingSpotsActivity : AppCompatActivity() {
             intent.getParcelableArrayListExtra<FishingSpot>("nearestFishingSpots")!!.toList()
         val nearestFishingSpotsListView =
             findViewById<ListView>(R.id.nearest_fishing_spots_list_view)
-//        nearestFishingSpotsListView.adapter = ArrayAdapter(
-//            this, android.R.layout.simple_list_item_1, nearestFishingSpots!!.map { it.name }
-//        )
+
         nearestFishingSpotsListView.adapter = FishingSpotsAdapter(
             this,
             nearestFishingSpots

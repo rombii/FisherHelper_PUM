@@ -1,19 +1,15 @@
 package com.example.fisherhelper
 
-import android.app.AlertDialog
-import android.app.DownloadManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.Request
@@ -41,7 +37,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMapsSdkInitializ
 
     private lateinit var binding: ActivityMapsBinding
 
-    private lateinit var currentLocation: Location
+   public lateinit var currentLocation: Location
+
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val permissionCode = 101
 
@@ -98,7 +95,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMapsSdkInitializ
     }
 
 
-    private fun getCurrentLocationUser() {
+    public fun getCurrentLocationUser() {
         if (ActivityCompat.checkSelfPermission(
                 this, android.Manifest.permission.ACCESS_FINE_LOCATION
             ) !=
@@ -243,7 +240,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMapsSdkInitializ
                     val windSpeed = jsonResponse.getJSONObject("wind").getDouble("speed")
                     val weather = jsonResponse.getJSONArray("weather").getJSONObject(0).getString("main")
                     val isGoodWeather = isGoodWeather(temperature, windSpeed, weather)
-                    temperatureTextView.text = "Temperatura:"+String.format("%.0f",celsjus)+"°C"
+                    temperatureTextView.text = "Temperatura: "+String.format("%.0f",celsjus)+"°C"
                  //   weatherDescriptionTextView.text = "Opis pogody: $weather"
                     if (isGoodWeather) {
                         weatherDescriptionTextView.text = "Pogoda na łowienie: doskonała"
@@ -277,9 +274,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMapsSdkInitializ
                 for (document in documents) {
                     val geopoint = document.getGeoPoint("geoPoint")
                     val latLng = LatLng(geopoint!!.latitude, geopoint!!.longitude)
+                    val latlng2 = LatLng(currentLocation.latitude, currentLocation.longitude)
                     val name = document.get("name")
-                 //   val latLng2 = LatLng(50.029488, 22.008091)
-                    val fishingSpot = FishingSpot(name as String, latLng,)
+
+                    val fishingSpot = FishingSpot(name as String, latLng,latlng2)
                     fishingSpots.add(fishingSpot)
                 }
 
@@ -288,7 +286,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMapsSdkInitializ
                     val distance = FloatArray(1)
                     val latLng2 = LatLng(50.029488, 22.008091)
                     Location.distanceBetween(
-//                       currentLocation.latitude, currentLocation.longitude,
+                   //    currentLocation.latitude, currentLocation.longitude,
                         latLng2.latitude,latLng2.longitude,
                         fishingSpot.latLng.latitude, fishingSpot.latLng.longitude, distance
                     )

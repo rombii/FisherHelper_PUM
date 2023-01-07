@@ -6,16 +6,6 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="hello world2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/textView2"
-            android:layout_marginTop="356dp" />
-
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -24,9 +14,13 @@
         <Button
                 android:text="@string/map_button_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="108dp"
                 android:id="@+id/map_button"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                app:icon="@drawable/fishingtool"
+                app:backgroundTint="#03A9F4"
+               />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
