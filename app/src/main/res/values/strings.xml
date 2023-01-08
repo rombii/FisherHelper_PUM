@@ -2,4 +2,5 @@
     <string name="app_name">FisherHelper</string>
     <string name="map_button_text">Mapa łowisk</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="take_photo">Scan</string>
 </resources>

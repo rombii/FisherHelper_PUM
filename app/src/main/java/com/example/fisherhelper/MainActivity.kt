@@ -26,6 +26,12 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        scan_button.setOnClickListener {
+            val intent = Intent(this,ScannerActivity::class.java)
+            startActivity(intent)
+        }
+
+
 
     }
 }
