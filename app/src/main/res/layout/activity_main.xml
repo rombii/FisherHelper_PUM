@@ -65,6 +65,14 @@
                 app:icon="@drawable/scanner"
                 android:text="Skaner ryb" />
 
+        <Button
+                android:id="@+id/weather_button"
+                android:layout_width="match_parent"
+                android:layout_height="82dp"
+                app:backgroundTint="#03A9F4"
+                app:icon="@drawable/weather"
+                android:text="Pogoda" />
+
     </LinearLayout>
 
     <ImageView

@@ -3,4 +3,5 @@
     <string name="map_button_text">Mapa łowisk</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="take_photo">Scan</string>
+    <string name="_06_40_am">06:40 AM</string>
 </resources>
