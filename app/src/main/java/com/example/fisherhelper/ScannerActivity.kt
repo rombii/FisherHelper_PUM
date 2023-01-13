@@ -2,10 +2,16 @@ package com.example.fisherhelper
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
+import androidx.appcompat.app.AlertDialog
+import android.app.Dialog
+import android.app.DialogFragment
 import android.content.ContentValues
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.media.Image
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -28,7 +34,10 @@ import com.google.mlkit.common.model.LocalModel
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.label.ImageLabeling
 import com.google.mlkit.vision.label.custom.CustomImageLabelerOptions
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_scanner.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -71,6 +80,7 @@ class ScannerActivity : AppCompatActivity() {
     private fun takePhoto() {
         // Get a stable reference of the modifiable image capture use case
         val imageCapture = imageCapture ?: return
+        image_capture_button.setText("Scanning...")
 
         // Create time stamped name and MediaStore entry.
         val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
@@ -95,48 +105,88 @@ class ScannerActivity : AppCompatActivity() {
         imageCapture.takePicture(
             ContextCompat.getMainExecutor(this),
             object : ImageCapture.OnImageCapturedCallback()    {
-                override fun onCaptureSuccess(image: ImageProxy) {
-                    val buffer = image.planes[0].buffer
-                    val bytes = ByteArray(buffer.capacity())
-                    buffer[bytes]
-                    val bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                    image.close()
-                    val localModel = LocalModel.Builder()
-                        .setAssetFilePath("model.tflite")
-                        .build()
-                    val customImageLabelerOptions = CustomImageLabelerOptions.Builder(localModel)
-                        .setConfidenceThreshold(0.5f)
-                        .setMaxResultCount(5)
-                        .build()
-                    val labeler = ImageLabeling.getClient(customImageLabelerOptions)
-                    val image = InputImage.fromBitmap(bitmapImage!!, 0)
-                    var outputText = ""
-                    var maxConfidence = 0f
-                    labeler.process(image).addOnSuccessListener { labels ->
-                        // Task completed successfully
-                        for (label in labels) {
-                            Log.d(label.text, labels.toString() + " " + labels.size)
-                            //TODO
-                            //Dodac alert box co to jest i czy chce wyszukac info
-                            //I sprobowac ogarnac o co chodzi z tymi wynikami
-                            if(label.confidence > maxConfidence) {
-                                outputText = label.text
-                                maxConfidence = label.confidence
-                            }
+                override fun onCaptureSuccess(imageProxy: ImageProxy) = runBlocking{
+                    val job = launch { scanner(imageProxy) }
+                    job.join()
+                }
+            }
+        )
+    }
+
+
+    private fun scanner(image: ImageProxy) {
+        val mediaImage = image.image
+        if(mediaImage != null) {
+                val image = InputImage.fromMediaImage(mediaImage!!, image.imageInfo.rotationDegrees)
+                Log.d("sdfghjklkjhgfdsdfghjkl", "1")
+                val localModel = LocalModel.Builder()
+                    .setAssetFilePath("model.tflite")
+                    .build()
+                Log.d("sdfghjklkjhgfdsdfghjkl", "2")
+                val customImageLabelerOptions = CustomImageLabelerOptions.Builder(localModel)
+                    .setConfidenceThreshold(0.5f)
+                    .setMaxResultCount(5)
+                    .build()
+                Log.d("sdfghjklkjhgfdsdfghjkl", "3")
+                val labeler = ImageLabeling.getClient(customImageLabelerOptions)
+                Log.d("sdfghjklkjhgfdsdfghjkl", "4")
+                var outputText = ""
+                var maxConfidence = 0f
+                Log.d("test", "test")
+                labeler.process(image).addOnSuccessListener { labels ->
+                    // Task completed successfully
+                    for (label in labels) {
+                        Log.d(label.text, labels.toString() + " " + labels.size)
+                        if (label.confidence > maxConfidence) {
+                            maxConfidence = label.confidence
+                            outputText = label.text
                         }
+
+                    }
+                    image_capture_button.setText(maxConfidence.toString())
+                    if (maxConfidence >= 0.7) {
                         val genusSpecies = outputText.split(" ")
                         val url = "https://www.fishbase.se/summary/${genusSpecies[0]}-${genusSpecies[1]}.html"
                         val i = Intent(Intent.ACTION_VIEW)
                         i.data = Uri.parse(url)
                         startActivity(i)
+                    } else if (maxConfidence < 0.7 && maxConfidence > 0) {
+                        val builder = AlertDialog.Builder(this@ScannerActivity)
+                        builder.setTitle(R.string.dialog_titleNotSure)
+                            .setMessage(R.string.dialog_notSure)
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.find) { dialogInterface, it ->
+                                dialogInterface.cancel()
+                                val genusSpecies = outputText.split(" ")
+                                val url = "https://www.fishbase.se/summary/${genusSpecies[0]}-${genusSpecies[1]}.html"
+                                val i = Intent(Intent.ACTION_VIEW)
+                                i.data = Uri.parse(url)
+                                startActivity(i)
+                            }
+                            .setNegativeButton(R.string.tryAgain) { dialogInterface, it ->
+                                dialogInterface.cancel()
+                            }
+                            .show()
+                    } else {
+                        Log.d(maxConfidence.toString(), maxConfidence.toString())
+                        val builder = AlertDialog.Builder(this@ScannerActivity)
+                        builder.setTitle(R.string.dialog_titleNotFound)
+                            .setMessage(R.string.dialog_notFound)
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.accept) { dialogInterface, it ->
+                                dialogInterface.cancel()
+                            }
+                            .show()
+
                     }
-                        .addOnFailureListener { e ->
-                            //Error
-                        }
+                    image_capture_button.setText("Scan")
                 }
+                    .addOnFailureListener { e ->
+                        //Error
+                    }
             }
-        )
-    }
+            image.close()
+        }
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
