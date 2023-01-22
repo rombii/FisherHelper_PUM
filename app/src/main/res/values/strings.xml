@@ -3,4 +3,14 @@
     <string name="map_button_text">Mapa łowisk</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="take_photo">Scan</string>
+    <string name="_06_40_am">06:40 AM</string>
+    <string name="dialog_notSure">Confidance is below 70% you can check information about recognized species or try
+        again
+    </string>
+    <string name="find">Search</string>
+    <string name="tryAgain">Try Again</string>
+    <string name="dialog_notFound">Scanner didn\'t find any fish try again</string>
+    <string name="dialog_titleNotFound">Try Again</string>
+    <string name="dialog_titleNotSure">Not Sure</string>
+    <string name="accept">Okay</string>
 </resources>
