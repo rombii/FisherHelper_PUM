@@ -1,5 +1,7 @@
 package com.example.fisherhelper
 
+
+import android.annotation.SuppressLint
 import android.os.AsyncTask
 import android.os.Bundle
 import android.view.View
@@ -15,7 +17,8 @@ import java.util.*
 
 class WeatherActivity : AppCompatActivity() {
 
-    val CITY: String = "rzeszow,pl"
+
+    val CITY: String = "Rzeszow,pl"
     val API: String = "3b76f82e8a13f592648058112756e765" // Use API key
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,10 +38,12 @@ class WeatherActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.errorText).visibility = View.GONE
         }
 
+
+
         override fun doInBackground(vararg params: String?): String? {
             var response:String?
             try{
-                response = URL("https://api.openweathermap.org/data/2.5/weather?q=$CITY&units=metric&appid=$API").readText(
+                response = URL("https://api.openweathermap.org/data/2.5/weather?q=$CITY&units=metric&appid=$API&lang=pl").readText(
                     Charsets.UTF_8
                 )
             }catch (e: Exception){
@@ -47,6 +52,7 @@ class WeatherActivity : AppCompatActivity() {
             return response
         }
 
+        @SuppressLint("SimpleDateFormat")
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             try {
@@ -62,28 +68,30 @@ class WeatherActivity : AppCompatActivity() {
                 val temp = main.getString("temp")+"°C"
                 val tempMin = "Min Temp: " + main.getString("temp_min")+"°C"
                 val tempMax = "Max Temp: " + main.getString("temp_max")+"°C"
-                val pressure = main.getString("pressure")
-                val humidity = main.getString("humidity")
+                val pressure = main.getString("pressure")+"hPa"
+                val humidity = main.getString("humidity")+"%"
 
+                val feels_like = main.getString("feels_like")+"°C"
                 val sunrise:Long = sys.getLong("sunrise")
                 val sunset:Long = sys.getLong("sunset")
-                val windSpeed = wind.getString("speed")
+                val windSpeed =wind.getString("speed")+"m/s"
                 val weatherDescription = weather.getString("description")
 
                 val address = jsonObj.getString("name")+", "+sys.getString("country")
 
                 /* Populating extracted data into our views */
                 findViewById<TextView>(R.id.address).text = address
-                findViewById<TextView>(R.id.updated_at).text =  updatedAtText
+//                findViewById<TextView>(R.id.updated_at).text =  updatedAtText
                 findViewById<TextView>(R.id.status).text = weatherDescription.capitalize()
                 findViewById<TextView>(R.id.temp).text = temp
                 findViewById<TextView>(R.id.temp_min).text = tempMin
                 findViewById<TextView>(R.id.temp_max).text = tempMax
-                findViewById<TextView>(R.id.sunrise).text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunrise*1000))
-                findViewById<TextView>(R.id.sunset).text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunset*1000))
+                findViewById<TextView>(R.id.sunrise).text = SimpleDateFormat("HH:mm ").format(Date(sunrise*1000))
+                findViewById<TextView>(R.id.sunset).text = SimpleDateFormat("HH:mm ").format(Date(sunset*1000))
                 findViewById<TextView>(R.id.wind).text = windSpeed
                 findViewById<TextView>(R.id.pressure).text = pressure
                 findViewById<TextView>(R.id.humidity).text = humidity
+                findViewById<TextView>(R.id.feels_like).text = feels_like
 
                 /* Views populated, Hiding the loader, Showing the main design */
                 findViewById<ProgressBar>(R.id.loader).visibility = View.GONE

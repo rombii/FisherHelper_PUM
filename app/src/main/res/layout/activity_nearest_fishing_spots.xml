@@ -7,6 +7,7 @@
     <ListView
             android:id="@+id/nearest_fishing_spots_list_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="#03A9F4" />
 
 </LinearLayout>
