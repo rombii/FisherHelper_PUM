@@ -2,31 +2,22 @@ package com.example.fisherhelper
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
-import androidx.appcompat.app.AlertDialog
-import android.app.Dialog
-import android.app.DialogFragment
 import android.content.ContentValues
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
-import android.media.Image
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.video.Recorder
-import androidx.camera.video.Recording
-import androidx.camera.video.VideoCapture
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.fisherhelper.databinding.ActivityScannerBinding
@@ -43,17 +34,11 @@ import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-
-typealias LumaListener = (luma: Double) -> Unit
-
-
+@Suppress("NAME_SHADOWING")
 class ScannerActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityScannerBinding
 
     private var imageCapture: ImageCapture? = null
-
-    private var videoCapture: VideoCapture<Recorder>? = null
-    private var recording: Recording? = null
 
     private lateinit var cameraExecutor: ExecutorService
 
@@ -77,10 +62,11 @@ class ScannerActivity : AppCompatActivity() {
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun takePhoto() {
         // Get a stable reference of the modifiable image capture use case
         val imageCapture = imageCapture ?: return
-        image_capture_button.setText("Scanning...")
+        image_capture_button.text = "Scanning..."
 
         // Create time stamped name and MediaStore entry.
         val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
@@ -94,7 +80,7 @@ class ScannerActivity : AppCompatActivity() {
         }
 
         // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions
+        ImageCapture.OutputFileOptions
             .Builder(contentResolver,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 contentValues)
@@ -114,11 +100,11 @@ class ScannerActivity : AppCompatActivity() {
     }
 
 
-    @SuppressLint("UnsafeOptInUsageError")
+    @SuppressLint("UnsafeOptInUsageError", "SetTextI18n")
     private fun scanner(image: ImageProxy) {
         val mediaImage = image.image
         if(mediaImage != null) {
-                val image = InputImage.fromMediaImage(mediaImage!!, image.imageInfo.rotationDegrees)
+                val image = InputImage.fromMediaImage(mediaImage, image.imageInfo.rotationDegrees)
                 val localModel = LocalModel.Builder()
                     .setAssetFilePath("model.tflite")
                     .build()
@@ -140,7 +126,7 @@ class ScannerActivity : AppCompatActivity() {
                         }
 
                     }
-                    image_capture_button.setText(maxConfidence.toString())
+                    image_capture_button.text = maxConfidence.toString()
                     if (maxConfidence >= 0.7) {
                         val genusSpecies = outputText.split(" ")
                         val url = "https://www.fishbase.se/summary/${genusSpecies[0]}-${genusSpecies[1]}.html"
@@ -152,7 +138,7 @@ class ScannerActivity : AppCompatActivity() {
                         builder.setTitle(R.string.dialog_titleNotSure)
                             .setMessage(R.string.dialog_notSure)
                             .setCancelable(false)
-                            .setPositiveButton(R.string.find) { dialogInterface, it ->
+                            .setPositiveButton(R.string.find) { dialogInterface, _ ->
                                 dialogInterface.cancel()
                                 val genusSpecies = outputText.split(" ")
                                 val url = "https://www.fishbase.se/summary/${genusSpecies[0]}-${genusSpecies[1]}.html"
@@ -160,7 +146,7 @@ class ScannerActivity : AppCompatActivity() {
                                 i.data = Uri.parse(url)
                                 startActivity(i)
                             }
-                            .setNegativeButton(R.string.tryAgain) { dialogInterface, it ->
+                            .setNegativeButton(R.string.tryAgain) { dialogInterface, _ ->
                                 dialogInterface.cancel()
                             }
                             .show()
@@ -170,15 +156,15 @@ class ScannerActivity : AppCompatActivity() {
                         builder.setTitle(R.string.dialog_titleNotFound)
                             .setMessage(R.string.dialog_notFound)
                             .setCancelable(false)
-                            .setPositiveButton(R.string.accept) { dialogInterface, it ->
+                            .setPositiveButton(R.string.accept) { dialogInterface, _ ->
                                 dialogInterface.cancel()
                             }
                             .show()
 
                     }
-                    image_capture_button.setText("Scan")
+                    image_capture_button.text = "Scan"
                 }
-                    .addOnFailureListener { e ->
+                    .addOnFailureListener {
                         //Error
                     }
             }
