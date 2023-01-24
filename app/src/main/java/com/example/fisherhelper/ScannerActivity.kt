@@ -114,22 +114,19 @@ class ScannerActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("UnsafeOptInUsageError")
     private fun scanner(image: ImageProxy) {
         val mediaImage = image.image
         if(mediaImage != null) {
                 val image = InputImage.fromMediaImage(mediaImage!!, image.imageInfo.rotationDegrees)
-                Log.d("sdfghjklkjhgfdsdfghjkl", "1")
                 val localModel = LocalModel.Builder()
                     .setAssetFilePath("model.tflite")
                     .build()
-                Log.d("sdfghjklkjhgfdsdfghjkl", "2")
                 val customImageLabelerOptions = CustomImageLabelerOptions.Builder(localModel)
                     .setConfidenceThreshold(0.5f)
                     .setMaxResultCount(5)
                     .build()
-                Log.d("sdfghjklkjhgfdsdfghjkl", "3")
                 val labeler = ImageLabeling.getClient(customImageLabelerOptions)
-                Log.d("sdfghjklkjhgfdsdfghjkl", "4")
                 var outputText = ""
                 var maxConfidence = 0f
                 Log.d("test", "test")
