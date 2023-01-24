@@ -46,8 +46,8 @@ data class FishingSpot(
             val latLng2 = LatLng(50.029488, 22.008091)
 
             Location.distanceBetween(
-                     //                currentLocation.latitude, currentLocation.longitude,
-                latLng2.latitude,latLng2.longitude,
+                 currentLocation.latitude, currentLocation.longitude,
+//                latLng2.latitude,latLng2.longitude,
                latLng.latitude, latLng.longitude, distance
             )
             return distance[0] / 1000

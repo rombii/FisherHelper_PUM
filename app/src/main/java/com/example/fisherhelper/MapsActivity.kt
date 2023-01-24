@@ -129,12 +129,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMapsSdkInitializ
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-      //  val uiSettings = googleMap.uiSettings
-
-      //  uiSettings.isMyLocationButtonEnabled = true
-
-      //  val latLng = LatLng(currentLocation.latitude ,currentLocation.longitude)
-       val latLng = LatLng(50.029488, 22.008091) //example location of rzeszow
+        val latLng = LatLng(currentLocation.latitude ,currentLocation.longitude)
+//       val latLng = LatLng(50.029488, 22.008091) //example location of rzeszow
         val location = latLng.latitude.toString()
         val location1 = latLng.longitude.toString()
         val markerOptions = MarkerOptions().position(latLng)
@@ -286,8 +282,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMapsSdkInitializ
                     val distance = FloatArray(1)
                     val latLng2 = LatLng(50.029488, 22.008091)
                     Location.distanceBetween(
-                   //    currentLocation.latitude, currentLocation.longitude,
-                        latLng2.latitude,latLng2.longitude,
+                       currentLocation.latitude, currentLocation.longitude,
+//                        latLng2.latitude,latLng2.longitude,
                         fishingSpot.latLng.latitude, fishingSpot.latLng.longitude, distance
                     )
                     distance[0]
