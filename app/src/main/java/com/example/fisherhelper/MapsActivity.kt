@@ -231,7 +231,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMapsSdkInitializ
 
         val request = StringRequest(
             Request.Method.GET, url,
-            Response.Listener { response ->
+            { response ->
                 try {
                     val jsonResponse = JSONObject(response)
                     val main = jsonResponse.getJSONObject("main")
@@ -251,7 +251,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMapsSdkInitializ
 // Tutaj możesz obsłużyć wyjątek, jeśli odpowiedź API jest niepoprawna lub nie można jej przetworzyć.
                 }
             },
-            Response.ErrorListener { error ->
+            { error ->
 // Tutaj możesz obsłużyć błąd, jeśli żądanie do API zostało odrzucone lub nie udało się je wysłać.
             }
         )

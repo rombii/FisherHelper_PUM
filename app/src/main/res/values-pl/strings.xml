@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FisherHelper</string>
+    <string name="map_button_text">Mapa łowisk</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="take_photo">Scan</string>
+    <string name="_06_40_am">06:40 AM</string>
+    <string name="dialog_notSure">Pewność skanu jest poniżej 70% możesz wyszukać informacji mimo to lub powtórzyć skan.
+    </string>
+    <string name="find">Szukaj</string>
+    <string name="tryAgain">Spróbuj ponownie</string>
+    <string name="dialog_notFound">Skaner nie odnalazł ryby na zdjęciu ponów skan</string>
+    <string name="dialog_titleNotFound">Spróbuj ponownie</string>
+    <string name="dialog_titleNotSure">Brak pewności</string>
+    <string name="accept">Okej</string>
+</resources>
